@@ -1,16 +1,23 @@
 console.log('Before');
-getUser(1, (user) => {
-    console.log('User', user)
-    getRepos(user.githubUsername, (repos) => {
-        console.log('Repos', repos)
-        getCommits(repos[0], (commits) => {
-            console.log(commits)
-        });
-    });
-
-});
+getUser(1, userGetRepos);
 console.log('After');
 
+// Named functions to replace the nested stuff above
+function displayCommits(commits) {
+    console.log(commits);
+}
+
+function firstRepoCommits(repos) {
+    console.log('Repos', repos)
+    getCommits(repos[0], displayCommits);
+}
+
+function userGetRepos(user) {
+    console.log('User', user)
+    getRepos(user.githubUsername, firstRepoCommits);
+}
+
+// simulate Async functions with setTimeout
 function getUser(id, callback) {
     setTimeout(() => {
         console.log('Reading user from DB..');
